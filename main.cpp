@@ -1,20 +1,41 @@
 #include <fstream>
+//#include <boost/algorithm/string.hpp>
+#include<cmath>
+#include <stdio.h>
 #include <iostream>
+#include <stdlib.h>
+#include <string.h>
+#include <bits/stdc++.h>
+
 using namespace std;
-/*
-string inputText(string ask) // Pas certain que ce soit utile.
+
+string tolow(string a) // https://stackoverflow.com/questions/11635/case-insensitive-string-comparison-in-c
 {
-    string text="";
-    cout << ask << endl;
-        cin >> text;
-    return text;
+    for(unsigned int i=0; i<a.length(); i++)
+    {
+        a[i]=tolower(a[i]);
+    }
+    return a;
 }
-*/
+
+string toupp(string a) // https://stackoverflow.com/questions/11635/case-insensitive-string-comparison-in-c
+{
+    for(unsigned int i=0; i<a.length(); i++)
+    {
+        a[i]=toupper(a[i]);
+    }
+    return a;
+}
+
+
 int main()
 {
-    cout << "I will help You to start your program!" << endl;
+    cout << "I will help You to start your program!" << endl << endl;
+    // TODO : dessin !
+
     string name = "";
-    string preprog = "#include <iostream> \n using namespace std; \n int main() \n \{ \n";
+    string preprog1 = "#include <iostream> \n using namespace std; \n ";
+    string preprog2 = " \n int main() \n \{ \n";
     string postprog = " \n return 0; \n }";
     bool random = false;
     do
@@ -25,10 +46,10 @@ int main()
         // cout << "Do NOT use _temp1_ in the name, please!" << endl;
         // cout << "Do NOT use _temp2_ in the name, please!" << endl;
         // cout << "Do NOT use _temp3_ in the name, please!" << endl;
-        cin >> name;
+        getline(cin,name); // Accepte l'espace ! DANGER.
     }
     while (name == "");
-    if (name.size() < 4) // If not .cpp ?
+    if (name.size() < 4) // If not .cpp ? // I need to check the size of the string, in order to be able to do the next test.
     {
         name = name + ".cpp";
     }
@@ -39,7 +60,7 @@ int main()
 
     clog << name << endl;
     ofstream myfile;
-    myfile.open (name.c_str(),ios::app);
+    myfile.open (name.c_str(),ios::app); // If exists: not now.
     if (!myfile.is_open()) // Error file.
     {
         cerr << "Unable to open file!";
@@ -47,16 +68,17 @@ int main()
     }
     else // File ok.
     {
-        myfile << preprog;
+        myfile << preprog1;
+        myfile << preprog2;
         string choice = "0";
         do
         {
-         // input and " " makes problems.
 
             cout << "What do You want?" << endl;
-            cout <<"1: Display text."<< endl;
+            cout <<"1: Display line of text."<< endl;
 
             cout <<"2: Create value."<< endl;
+            cout <<"C: Line of raw C++ code."<< endl;
             /* cout <<"2: Input value (TO DO)"<< endl;
              cout <<"3: Display value (TO DO)"<< endl;
              cout <<"4: Calculate value (TO DO)"<< endl;
@@ -64,44 +86,57 @@ int main()
              cout <<"6: Random value (TO DO)"<< endl;
              cout <<"7: Fichier (TO DO)"<< endl;
              cout <<"8: Fichier (TO DO)"<< endl;
-            poser un label, un goto, aller au label, code direct, remarque.
+            Label,
+            Goto,
+            => label,
+            rem.
 
              cout <<"9: Sauver (TO DO)"<< endl;
              */
             cout <<"0: Quit"<< endl;
-            cin >> choice;
+            getline(cin,choice);
             // If, instead of switch, to have letters.
             if (choice == "1")
             {
-
-
                 cout << "Your text?" << endl;
                 string text = "";
-                cin >> text; // Espace => problem.
+                getline(cin,text);
                 myfile << "cout << \""<< text << "\" << endl; \n";
             }
             else if (choice == "2")
             {
-                 cout << "The type of your variable?" << endl;
+                cout << "The type of your variable?" << endl;
                 string type = "";
-cin >> type;
-
+                getline(cin,type);
+                type=tolow(type);
                 cout << "The name of your variable?" << endl;
                 string nameVar = "";
-                cin >> nameVar;
-
+                getline(cin,nameVar);
                 cout << "The initial value of your variable?" << endl;
                 string valueVariable = ""; // No problem if number coded as string.
-                cin >> valueVariable;
-                myfile << type << " " << nameVar << " = " << valueVariable << "; \n"<< endl;
+                getline(cin,valueVariable);
+
+                if ((type) != "string")
+                {
+                    myfile << type << " " << nameVar << " = \"" << valueVariable << "\"; \n"<< endl;
+
+                }
+                else
+                {
+                    myfile << type << " " << nameVar << " = " << valueVariable << "; \n"<< endl;
+                }
             }
-
-
+            else   if ((choice == "C") or (choice == "c"))
+            {
+                cout << "Your code?" << endl;
+                string text = "";
+                getline(cin,text);
+                myfile <<  text <<  "\n";
+            }
         }
         while ( choice != "0");
     }
     myfile << postprog;
-
     myfile.close();
     return 0;
 }
