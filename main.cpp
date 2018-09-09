@@ -106,7 +106,7 @@ int main()
              */
             cout <<"0: Quit"<< endl;
             getline(cin, choice);
-            // If, instead of switch, to have letters.
+            // If, instead of switch, to have strings.
             if (choice == "1")
             {
                 cout << "Your text?" << endl;
